@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>title from version3</title>
+    <link rel="stylesheet" href="./css/milligram.css" />
+  </head>
+  <body>
+    Data from Backend
+    <div class="container">
+      <a class="button button-outline" href="./create.html">Create now</a>
+      <div class="row">
+        <table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Product Code</th>
+              <th>Unit Price</th>
+              <th>Qty</th>
+              <th>Total Price</th>
+              <th>Delete</th>
+              <th>Update</th>
+              
+            </tr>
+          </thead>
+          <tbody id="listItem"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="./js/axios.min.js"></script>
+    <script>
+      getData();
+      async function getData() {
+        let URL = "https://crud.teamrabbil.com/api/v1/ReadProduct";
+        let res = await axios(URL);
+        let list = res.data["data"];
+
+        list.forEach((Item) => {
+          document.querySelector("#listItem").innerHTML += `
+        <td>${Item["ProductName"]}</td>
+        <td>${Item["ProductCode"]}</td>
+        <td>${Item["UnitPrice"]}</td>
+        <td>${Item["Qty"]}</td>
+        <td>${Item["TotalPrice"]}</td>
+        <td><button onclick="deleteItem('${Item['_id']}')">Delete </button></td>
+        <td><button onclick="goForUpdate('${Item['_id']}')">Update</button></td>
+        `;
+        });
+      }
+      async function deleteItem(id){
+        let URL=`https://crud.teamrabbil.com/api/v1/DeleteProduct/${id}`;
+        await axios.get(URL);
+        window.location.reload();
+      }
+      
+      function goForUpdate(id){
+        window.location=`update.html?id=${id}`
+      }
+
+    </script>
+  </body>
+</html>
